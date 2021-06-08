@@ -1,0 +1,10 @@
+data/
+app/
+.DS_Store
+./bookie
+.docker/data
+.docker/rabbitmq/data
+.docker/rabbitmq/logs
+rabbitmq
+bookie/.env.local.php
+./bookie

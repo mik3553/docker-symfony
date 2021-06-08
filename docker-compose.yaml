@@ -1,0 +1,54 @@
+version: '3.7'
+volumes:
+   appdata: ~
+
+services:
+    mysql:
+        image: mysql:5.7
+        container_name: bookie_app_mysql
+        volumes:
+            - .docker/data/db:/var/lib/mysql
+            - .docker/data/test:/home/test
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        networks:
+            default:
+                aliases:
+                    - 'mysql.bookie.app'
+                    - 'mysql'
+
+    php:
+        build: .docker/php
+        container_name: bookie_app_php
+        volumes:
+            - ${SYMFONY_APP}:${WORKDIR}
+            # On s'assure que le cache et les logs ne restent que sur le container
+            # Version Symfony 4
+            - appdata:${WORKDIR}/var/cache
+            - appdata:${WORKDIR}/var/log
+            - ./bookie/vendor:${WORKDIR}/vendor:delegated
+        working_dir: ${WORKDIR}
+        depends_on:
+            - mysql
+
+    nginx:
+        container_name: bookie_app_nginx
+        build: .docker/nginx
+        volumes:
+            - ${SYMFONY_APP}:${WORKDIR}
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - mysql
+            - php
+        networks:
+            default:
+                aliases:
+                    - 'dev.bookie.m2i'
+                    - 'bookie.m2i'
