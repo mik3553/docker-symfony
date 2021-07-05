@@ -31,7 +31,17 @@ services:
             # Version Symfony 4
             - appdata:${WORKDIR}/var/cache
             - appdata:${WORKDIR}/var/log
-            - ./bookie/vendor:${WORKDIR}/vendor:delegated
+            - ./bookie/public/color:${WORKDIR}/public/color:delegated
+            - ./bookie/public/contactForm:${WORKDIR}/public/contactForm:delegated
+            - ./bookie/public/css:${WORKDIR}/public/css:delegated
+            - ./bookie/public/dist:${WORKDIR}/public/dist:delegated
+            - ./bookie/public/fonts:${WORKDIR}/public/fonts:delegated
+            - ./bookie/public/ico:${WORKDIR}/public/ico:delegated
+            - ./bookie/public/img:${WORKDIR}/public/img:delegated
+            - ./bookie/public/js:${WORKDIR}/public/js:delegated
+            - ./bookie/public/plugins:${WORKDIR}/public/plugins:delegated
+            - ./bookie/public/theme:${WORKDIR}/public/theme:delegated
+
         working_dir: ${WORKDIR}
         depends_on:
             - mysql
